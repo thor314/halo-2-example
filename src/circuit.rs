@@ -1,10 +1,12 @@
-// next: implement Circuit for MyCircuit
+use std::marker::PhantomData;
 
 use ff::Field;
 use halo2_proofs::{
-  circuit::{SimpleFloorPlanner, Value},
+  circuit::{Chip, SimpleFloorPlanner, Value},
   plonk::{Advice, Circuit, Column, ConstraintSystem, Fixed, Instance},
 };
+
+use crate::chip::{MyChipConfig, MyChip};
 
 // 1. Create MyCircuit
 // taking input Field elements: a, b
@@ -20,7 +22,8 @@ pub struct MyCircuit<F: Field> {
 impl<F: Field> Circuit<F> for MyCircuit<F> {
   // the chip needs to be configured
   // field choice for the Circuit, see below
-  type Config = FieldConfig;
+  // can have Circuit config overlap with Chip config since only one Chip
+  type Config = MyChipConfig;
   // algorithm to plan table layout, using the default here
   type FloorPlanner = SimpleFloorPlanner;
 
@@ -45,8 +48,8 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
     config: Self::Config,
     layouter: impl halo2_proofs::circuit::Layouter<F>,
   ) -> Result<(), halo2_proofs::plonk::Error> {
-    // construct any arithmetic chips; see below for the construction of our chip
-    let field_chip = FieldChip::<F>::construct(config);
+    // load any used arithmetic chips; see below for the construction of our chip
+    let field_chip = MyChip::<F>::construct(config);
 
     // Load {private, constant} values into the circuit
     let a = field_chip.load_private(layouter.namespace(|| "load a"), self.a)?;
@@ -62,33 +65,4 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
     // and "return" the result as a public input to the circuit
     field_chip.expose_public(layouter.namespace(|| "expose result"), c, 0)
   }
-}
-
-/// The state of each chip is stored in a field config struct.
-#[derive(Clone)]
-pub struct FieldConfig;
-
-impl FieldConfig {
-  fn configure<F: Field>(
-    meta: &mut ConstraintSystem<F>,
-    advice: [Column<Advice>; 2],
-    instance: Column<Instance>,
-    constant: Column<Fixed>,
-  ) -> Self {
-    todo!()
-  }
-}
-
-#[derive(Clone)]
-pub struct FieldChip<F: Field> {
-  // the advice columns
-  advice:   [Column<Advice>; 2],
-  // the instance column
-  instance: Column<Instance>,
-  // the constant column
-  constant: Column<Fixed>,
-}
-
-impl<F: Field> FieldChip<F> {
-  fn construct(config: FieldConfig) -> Self { todo!() }
 }

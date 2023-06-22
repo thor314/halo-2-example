@@ -12,6 +12,7 @@
 // #[cfg(test)] mod tests;
 // mod utils;
 mod circuit;
+mod chip;
 
 use ff::Field;
 use halo2_proofs::circuit::Value;
