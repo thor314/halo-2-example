@@ -36,7 +36,9 @@ pub trait NumericInstructions<F: Field>: Chip<F> {
 }
 
 // Next up, we implement a gadget for MyChip
-#[derive(Clone)]
+#[derive(Clone, Debug)]
+
+/// Represent a value at a cell
 pub struct Number<F: Field>(AssignedCell<F, F>);
 
 impl<F: Field> NumericInstructions<F> for MyChip<F> {
@@ -58,7 +60,7 @@ impl<F: Field> NumericInstructions<F> for MyChip<F> {
     )
   }
 
-// load the constant
+  // load the constant
   fn load_constant(&self, mut layouter: impl Layouter<F>, constant: F) -> Result<Self::U, Error> {
     let config = self.config();
 
@@ -87,8 +89,10 @@ impl<F: Field> NumericInstructions<F> for MyChip<F> {
         // but we can only rely on relative offsets inside this region. So we
         // assign new cells inside the region and constrain them to have the
         // same values as the inputs.
+        dbg!(&a, &b);
         a.0.copy_advice(|| "lhs", &mut region, config.advice[0], 0)?;
         b.0.copy_advice(|| "rhs", &mut region, config.advice[1], 0)?;
+        dbg!(&a, &b);
 
         // Now we can assign the multiplication result, which is to be assigned
         // into the output position.
