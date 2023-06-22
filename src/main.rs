@@ -11,18 +11,12 @@
 // mod error;
 // #[cfg(test)] mod tests;
 // mod utils;
+mod circuit;
 
 use ff::Field;
 use halo2_proofs::circuit::Value;
 
-// 1. Create MyCircuit
-// taking input Field elements: a, b
-// returning a*b*constant
-#[derive(Default)]
-struct MyCircuit<F: Field> {
-  a: Value<F>,
-  b: Value<F>,
-}
+use crate::circuit::MyCircuit;
 
 fn main() {
   use halo2_proofs::{dev::MockProver, pasta::Fp};
@@ -51,5 +45,3 @@ fn main() {
   let prover = MockProver::run(k, &my_circuit, vec![public_inputs]).unwrap();
   assert!(prover.verify().is_err());
 }
-
-// next: implement Circuit for MyCircuit
