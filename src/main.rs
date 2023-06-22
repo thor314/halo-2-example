@@ -30,9 +30,9 @@ fn main() {
   // Instantiate the circuit with the private inputs.
   let a = Fp::from(2);
   let b = Fp::from(3);
-  let c = a.square() * b.square();
   // just for the sake of demonstration, show we can used fixed columns to load constants
   let constant = Fp::from(1);
+  let c = a.square() * b.square() * constant;
   let (a, b) = (Value::known(a), Value::known(b));
   let my_circuit = MyCircuit { a, b, constant };
 

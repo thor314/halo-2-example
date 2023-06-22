@@ -36,7 +36,7 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
   // describe exact gate/column arrangement
   fn configure(meta: &mut ConstraintSystem<F>) -> Self::Config {
     // used for IO; have a fan-in 2 circuit gate, so need 2 advice cols
-    let advice = [meta.advice_column(); 2];
+    let advice = [meta.advice_column(), meta.advice_column()];
     // store public inputs in Instance columns
     let instance = meta.instance_column();
     // for loading a constant

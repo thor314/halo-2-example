@@ -13,12 +13,12 @@ use crate::numeric_instructions::NumericInstructions;
 // FieldConfig (why?)
 #[derive(Clone)]
 pub struct MyChip<F: Field> {
-  pub config:  MyChipConfig,
+  config:  MyChipConfig,
   _marker: PhantomData<F>,
 }
 
-/// The state of each chip is stored in a config struct.
-/// This includes advice and instance columns, and a selector to enable the multiplication gate.
+// The state of each chip is stored in a config struct.
+// This includes advice and instance columns, and a selector to enable the multiplication gate.
 #[derive(Clone, Debug)]
 pub struct MyChipConfig {
   // Use two advice columns

@@ -14,23 +14,18 @@ use crate::chip::MyChip;
 // - multiply two numbers
 // - expose a number as public to the circuit
 pub trait NumericInstructions<F: Field>: Chip<F> {
-  /// Variable representing a number.
-  type U;
+  type Num;
 
-  /// Loads a number into the circuit as a private input.
-  fn load_private(&self, layouter: impl Layouter<F>, a: Value<F>) -> Result<Self::U, Error>;
+  fn load_private(&self, layouter: impl Layouter<F>, a: Value<F>) -> Result<Self::Num, Error>;
 
-  /// Loads a number into the circuit as a fixed constant.
-  fn load_constant(&self, layouter: impl Layouter<F>, constant: F) -> Result<Self::U, Error>;
+  fn load_constant(&self, layouter: impl Layouter<F>, constant: F) -> Result<Self::Num, Error>;
 
-  /// Returns `c = a * b`.
-  fn mul(&self, layouter: impl Layouter<F>, a: Self::U, b: Self::U) -> Result<Self::U, Error>;
+  fn mul(&self, layouter: impl Layouter<F>, a: Self::Num, b: Self::Num) -> Result<Self::Num, Error>;
 
-  /// Exposes a number as a public input to the circuit.
   fn expose_public(
     &self,
     layouter: impl Layouter<F>,
-    num: Self::U,
+    num: Self::Num,
     row: usize,
   ) -> Result<(), Error>;
 }
@@ -38,18 +33,18 @@ pub trait NumericInstructions<F: Field>: Chip<F> {
 // Next up, we implement a gadget for MyChip
 #[derive(Clone, Debug)]
 
-/// Represent a value at a cell
+// Represent a value at a cell
 pub struct Number<F: Field>(AssignedCell<F, F>);
 
 impl<F: Field> NumericInstructions<F> for MyChip<F> {
-  type U = Number<F>;
+  type Num = Number<F>;
 
   // load the private input
   fn load_private(
     &self,
     mut layouter: impl halo2_proofs::circuit::Layouter<F>,
     value: Value<F>,
-  ) -> Result<Self::U, halo2_proofs::plonk::Error> {
+  ) -> Result<Self::Num, halo2_proofs::plonk::Error> {
     let config = self.config();
 
     layouter.assign_region(
@@ -61,7 +56,7 @@ impl<F: Field> NumericInstructions<F> for MyChip<F> {
   }
 
   // load the constant
-  fn load_constant(&self, mut layouter: impl Layouter<F>, constant: F) -> Result<Self::U, Error> {
+  fn load_constant(&self, mut layouter: impl Layouter<F>, constant: F) -> Result<Self::Num, Error> {
     let config = self.config();
 
     layouter.assign_region(
@@ -74,7 +69,7 @@ impl<F: Field> NumericInstructions<F> for MyChip<F> {
     )
   }
 
-  fn mul(&self, mut layouter: impl Layouter<F>, a: Self::U, b: Self::U) -> Result<Self::U, Error> {
+  fn mul(&self, mut layouter: impl Layouter<F>, a: Self::Num, b: Self::Num) -> Result<Self::Num, Error> {
     let config = self.config();
 
     layouter.assign_region(
@@ -106,7 +101,7 @@ impl<F: Field> NumericInstructions<F> for MyChip<F> {
   fn expose_public(
     &self,
     mut layouter: impl Layouter<F>,
-    num: Self::U,
+    num: Self::Num,
     row: usize,
   ) -> Result<(), Error> {
     let config = self.config();
