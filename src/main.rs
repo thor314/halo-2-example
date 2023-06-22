@@ -29,8 +29,10 @@ fn main() {
   let a = Fp::from(2);
   let b = Fp::from(3);
   let c = a.square() + b.square();
+  // just for the sake of demonstration, show we can used fixed columns to load constants
+  let constant = Fp::from(1);
   let (a, b) = (Value::known(a), Value::known(b));
-  let my_circuit = MyCircuit { a, b };
+  let my_circuit = MyCircuit { a, b, constant };
 
   // Arrange the public input. We expose the multiplication result in row 0
   // of the instance column, so we position it there in our public inputs.
