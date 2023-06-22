@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use ff::Field;
 use halo2_proofs::{
   circuit::{AssignedCell, Chip, SimpleFloorPlanner, Value},
-  plonk::{Advice, Circuit, Column, ConstraintSystem, Fixed, Instance, Selector},
+  plonk::{Advice, Circuit, Column, ConstraintSystem, Fixed, Instance, Selector, Expression},
   poly::Rotation,
 };
 
@@ -92,6 +92,7 @@ impl MyChipConfig {
       // - When s_mul = 0, any value is allowed in lhs, rhs, and out.
       // - When s_mul != 0, this constrains lhs * rhs = out.
       vec![s_mul * (lhs * rhs - out)]
+      // vec![Expression::Constant(F::ZERO)]
     });
 
     MyChipConfig { advice, instance, s_mul }

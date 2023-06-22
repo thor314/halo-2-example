@@ -61,9 +61,10 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
       field_chip.load_constant(layouter.namespace(|| "load constant"), self.constant)?;
 
     // Finally, tell the circuit how to use our Chip
-    let ab = field_chip.mul(layouter.namespace(|| "a * b"), a, b)?;
-    let ab_sq = field_chip.mul(layouter.namespace(|| "a * b"), ab.clone(), ab)?;
-    let c = field_chip.mul(layouter.namespace(|| "a * b"), ab_sq, constant)?;
+    let aa = field_chip.mul(layouter.namespace(|| "a * b"), a.clone(), a)?;
+    let bb = field_chip.mul(layouter.namespace(|| "b * b"), b.clone(), b)?;
+    let c = field_chip.mul(layouter.namespace(|| "aa * bb"), aa, bb)?;
+    // let c = field_chip.mul(layouter.namespace(|| "_c * constant"), _c, constant)?;
 
     // and "return" the result as a public input to the circuit
     field_chip.expose_public(layouter.namespace(|| "expose result"), c, 0)
