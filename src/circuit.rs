@@ -6,7 +6,10 @@ use halo2_proofs::{
   plonk::{Advice, Circuit, Column, ConstraintSystem, Fixed, Instance},
 };
 
-use crate::chip::{MyChipConfig, MyChip};
+use crate::{
+  chip::{MyChip, MyChipConfig},
+  numeric_instructions::NumericInstructions,
+};
 
 // 1. Create MyCircuit
 // taking input Field elements: a, b
@@ -46,7 +49,7 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
   fn synthesize(
     &self,
     config: Self::Config,
-    layouter: impl halo2_proofs::circuit::Layouter<F>,
+    mut layouter: impl halo2_proofs::circuit::Layouter<F>,
   ) -> Result<(), halo2_proofs::plonk::Error> {
     // load any used arithmetic chips; see below for the construction of our chip
     let field_chip = MyChip::<F>::construct(config);
@@ -59,7 +62,7 @@ impl<F: Field> Circuit<F> for MyCircuit<F> {
 
     // Finally, tell the circuit how to use our Chip
     let ab = field_chip.mul(layouter.namespace(|| "a * b"), a, b)?;
-    let ab_sq = field_chip.mul(layouter.namespace(|| "a * b"), ab.clone(), b)?;
+    let ab_sq = field_chip.mul(layouter.namespace(|| "a * b"), ab.clone(), ab)?;
     let c = field_chip.mul(layouter.namespace(|| "a * b"), ab_sq, constant)?;
 
     // and "return" the result as a public input to the circuit

@@ -11,8 +11,9 @@
 // mod error;
 // #[cfg(test)] mod tests;
 // mod utils;
-mod circuit;
 mod chip;
+mod circuit;
+mod numeric_instructions;
 
 use ff::Field;
 use halo2_proofs::circuit::Value;
