@@ -1,3 +1,4 @@
 # halo-2-example
-A binary generated with [my cargo-generate template](github.com/thor314/tmpl). 
-You probably don't want to copy from here.
+Example following: https://zcash.github.io/halo2/user/simple-example.html
+
+Currently non-functional, crashes with unclear runtime error, not sure what that's about
