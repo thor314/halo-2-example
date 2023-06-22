@@ -69,7 +69,7 @@ test-log = "0.2" # log only
 # test-log =  { version = "0.2", default-features = false, features = ["trace"] }  # tracing
 quickcheck = "1.0"      # lowkey proptest suite
 quickcheck_macros = "1" # derive 
-rstest = "0.16"         # testing convenience proc-macros
+rstest = "0.17"         # testing convenience proc-macros
 
 [[test]]
 name = "integration"
